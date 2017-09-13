@@ -1,0 +1,50 @@
+version: '2'
+services:
+  web:
+    container_name: ffm_node
+    extends:
+      file: docker-compose.common.yml
+      service: web
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: ffm_node
+    command: npm start
+    environment:
+     - NODE_ENV=development
+    depends_on:
+     - db
+    ports:
+     - "3000:3000"
+     - "5858:5858"
+     - "35729:35729"
+     - "1337:1337"
+    volumes:
+     - ./:/opt/ffmedia
+     - node_modules:/opt/ffmedia/node_modules
+     - public:/opt/ffmedia/public
+     - uploads:/opt/ffmedia/uploads
+    networks:
+      - default
+  db:
+    container_name: ffm_mongo
+    extends:
+      file: docker-compose.common.yml
+      service: db
+    image: mongo:3.2
+    container_name: ffmedia_db
+    restart: always
+    ports:
+     - "27017:27017"
+    volumes:
+     - db_volume:/data/db
+    networks:
+      - default
+volumes:
+  db_volume:
+  node_modules:
+  public:
+  uploads:
+networks:
+  default:
+
